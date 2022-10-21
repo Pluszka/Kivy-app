@@ -1,12 +1,16 @@
 from kivy.app import App
-from kivy.uix.label import Label
+from kivy.uix.widget import Widget
 
 
-class MyApp(App):
+class LoginWindow(Widget):
+    pass
+
+
+class LoginSystemApp(App):
 
     def build(self):
-        return Label(text='Label')
+        return LoginWindow()
 
 
 if __name__ == "__main__":
-    MyApp().run()
+    LoginSystemApp().run()
