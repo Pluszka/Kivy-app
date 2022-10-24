@@ -38,22 +38,21 @@ class SignUpWindow(Screen, FloatLayout):
     def validate_data(self):
         try:
             print('dupa')
-            self.check_username()
-            self.check_email()
-            self.check_pwd()
-            print('ee')
+            # self.check_username()
+            # self.check_email()
+            # self.check_pwd()
+            # self.check_age()
+            self.authenticate_email()
         except Exception as e:
             show_pop_up(str(e))
 
-    def authenticate(self):
-        print('dupa')
-        # emailToken.generate_confirmation_token(self.email)
+    def authenticate_email(self):
+        token = emailToken.generate_confirmation_token(self.email.text)
 #TODO Check if username or already exist
 #TODO Send authentication e-mail
 
     def check_username(self):
         if self.username.text == '':
-            print('www')
             raise Exception('Choose a username')
 
 
