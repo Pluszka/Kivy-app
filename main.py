@@ -1,9 +1,10 @@
 import os
+from email.utils import parseaddr
 
 from dotenv import load_dotenv
 from kivy.app import App
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty, NumericProperty, StringProperty
+from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 from email_token import EmailToken
@@ -27,6 +28,7 @@ class SignUpWindow(Screen):
         try:
             print('dupa')
             self.checkUsername()
+            self.checkEmail()
             self.checkPwd()
             print('ee')
         except Exception as e:
@@ -43,6 +45,15 @@ class SignUpWindow(Screen):
             print('www')
             raise Exception('Choose a username')
 
+
+    def checkAge(self):
+        if self.age.text == "":
+            raise Exception('Type an age.')
+
+
+    def checkEmail(self):
+        if parseaddr(self.email.text)[1] == '':
+            raise Exception("Email not valid")
 
     def checkPwd(self):
         pwd = self.pwd.text
