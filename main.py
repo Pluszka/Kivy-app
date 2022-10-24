@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 from email_token import EmailToken
@@ -17,22 +20,30 @@ class WindowManager(ScreenManager):
     pass
 
 
-class SignUpWindow(Screen):
+class P(FloatLayout):
+    pass
+
+def show_pop_up(msg):
+    show = P()
+    popUpWindow = Popup(title='Test popup', content=Label(text=msg), size_hint=(None, None), size=(400, 400))
+    popUpWindow.open()
+
+class SignUpWindow(Screen, FloatLayout):
     username = ObjectProperty(None)
     email = ObjectProperty(None)
     age = ObjectProperty(None)
     pwd = ObjectProperty(None)
     pwd2 = ObjectProperty(None)
 
-    def validateData(self):
+    def validate_data(self):
         try:
             print('dupa')
-            self.checkUsername()
-            self.checkEmail()
-            self.checkPwd()
+            self.check_username()
+            self.check_email()
+            self.check_pwd()
             print('ee')
         except Exception as e:
-            print(e)
+            show_pop_up(str(e))
 
     def authenticate(self):
         print('dupa')
@@ -40,33 +51,35 @@ class SignUpWindow(Screen):
 #TODO Check if username or already exist
 #TODO Send authentication e-mail
 
-    def checkUsername(self):
+    def check_username(self):
         if self.username.text == '':
             print('www')
             raise Exception('Choose a username')
 
 
-    def checkAge(self):
+    def check_age(self):
         if self.age.text == "":
             raise Exception('Type an age.')
 
 
-    def checkEmail(self):
+    def check_email(self):
         if parseaddr(self.email.text)[1] == '':
             raise Exception("Email not valid")
 
-    def checkPwd(self):
+    def check_pwd(self):
         pwd = self.pwd.text
         if pwd != self.pwd2.text:
             raise Exception("Passwords doesn't match")
-        if len(pwd) < 10:
-            raise Exception("Password isn't long enough")
+        if len(pwd) < 12:
+            raise Exception("Password isn't long enough (min 12 char)")
         if [letter.isupper() for letter in pwd].count(True) < 1:
             raise Exception("Password need to contain at least one uppercase letter")
         if [letter.islower() for letter in pwd].count(True) < 1:
             raise Exception("Password need to contain at least one lowercase letter")
         if pwd.isalnum():
             raise Exception("Password need to contain at least one special character")
+        if [letter.isdigit() for letter in pwd].count(True) < 1:
+            raise Exception("Password need to contain at least one number")
 # class ContentWindow(Screen):
 #     pass
 
