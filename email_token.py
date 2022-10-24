@@ -1,10 +1,15 @@
+import os
+
+from dotenv import load_dotenv
 from itsdangerous import URLSafeTimedSerializer
+
+load_dotenv()
 
 
 class EmailToken:
 
-    def __init__(self, secret_key):
-        self.secret = secret_key
+    def __init__(self):
+        self.secret = os.environ.get('SECRET_KEY')
 
     def generate_confirmation_token(self, email):
         serializer = URLSafeTimedSerializer(self.secret)
