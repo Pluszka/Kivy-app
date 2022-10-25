@@ -1,0 +1,30 @@
+import smtplib
+from email.message import EmailMessage
+
+from email_token import EmailToken
+
+emailToken = EmailToken()
+
+class Emails:
+    def __init__(self, email, pwd):
+        self.my_email = email
+        self.app_pwd = pwd
+
+
+    def sendEmail(self, email_user, token):
+        with smtplib.SMTP('smtp.gmail.com') as connection:
+            connection.starttls()
+            connection.login(self.my_email, self.app_pwd)
+            connection.send_message(self.writeMsg(email_user, token))
+
+
+    def writeMsg(self, user_email, token):
+        msg = EmailMessage()
+        msg['Subject'] = 'Confirm an email'
+        msg['From'] = self.my_email
+        msg['To'] = user_email
+        msg.add_header('Content-Type', 'text/html')
+        content = f'<p>Please click link above to confirm your e-mail.</p>' \
+                  f'<button onclick="emailToken.confirm_token({token})">Confirm an email</button>'
+        msg.set_content(content, subtype='html')
+        return msg

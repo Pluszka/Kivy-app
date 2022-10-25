@@ -1,8 +1,8 @@
 import os
-from email.message import EmailMessage
 from email.utils import parseaddr
 
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
@@ -12,17 +12,28 @@ from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 from email_token import EmailToken
-import ssl
-import smtplib
+from send_emails import Emails
 
 load_dotenv()
 SECRET = os.environ.get('SECRET_KEY')
 EMAIL = os.environ.get('EMAIL')
 PASSWORD = os.environ.get('APP_PASSWORD')
-EMAIL_BODY = 'Please click link above to confirm your e-mail.'
-EMAIL_SUBJECT = 'Confirm an e-mail'
 emailToken = EmailToken()
-send_email = EmailMessage()
+send_email = Emails(EMAIL, PASSWORD)
+
+
+App.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cafes.db'
+App.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(App)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(250), unique=True, nullable=False)
+    email = db.Column(db.String(250), nullable=False,unique=True)
+    Age = db.Column(db.Integer, nullable=False)
+    pwd = db.Column(db.String(250), nullable=False)
+
+db.session.commit()
 
 class WindowManager(ScreenManager):
     pass
@@ -50,20 +61,14 @@ class SignUpWindow(Screen, FloatLayout):
             # self.check_pwd()
             # self.check_age()
             self.authenticate_email()
+
         except Exception as e:
             print(e)
             show_pop_up(str(e))
 
     def authenticate_email(self):
         token = emailToken.generate_confirmation_token(self.email.text)
-        send_email['From'] = EMAIL
-        send_email['To'] = self.email.text
-        send_email['Subject'] = EMAIL_SUBJECT
-        send_email.set_content(EMAIL_BODY)
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-            smtp.login(EMAIL, PASSWORD)
-            smtp.sendmail(EMAIL, self.email.text, send_email.as_string())
+        send_email.sendEmail(self.email.text, token)
 #TODO Check if username or already exist
 #TODO Send authentication e-mail
 
@@ -110,6 +115,7 @@ class LoginSystemApp(App):
 
     def build(self):
         return kv
+
 
 
 if __name__ == "__main__":

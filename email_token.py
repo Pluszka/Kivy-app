@@ -16,6 +16,7 @@ class EmailToken:
         return serializer.dumps(email, salt=self.secret)
 
     def confirm_token(self, token, expiration=3600):
+        print('dupa')
         serializer = URLSafeTimedSerializer(self.secret)
         try:
             email = serializer.loads(
