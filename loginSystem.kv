@@ -1,0 +1,127 @@
+WindowManager:
+    LoginWindow:
+    SignUpWindow:
+
+
+<LoginWindow>:
+    name: "login"
+	username : username
+	pwd : pwd
+
+	FloatLayout:
+		size: root.width, root.height
+
+		Label:
+			text : "USERNAME/EMAIL: "
+			size_hint : 0.2, 0.1
+			pos_hint : {"x":0.25, "top":0.9}
+
+		TextInput:
+			id : username
+			multiline :False
+			size_hint : 0.3, 0.1
+			pos_hint : {"x" : 0.45, "top" : 0.9}
+
+		Label:
+			text : "PASSWORD: "
+			size_hint : 0.2, 0.1
+			pos_hint : {"x" : 0.25, "top" : 0.7}
+
+		TextInput:
+			id : pwd
+			multiline :False
+			size_hint : 0.3, 0.1
+			pos_hint : {"x" : 0.45, "top" : 0.7}
+
+        Button:
+            text : "LOGIN"
+            size_hint : 0.3, 0.1
+            pos_hint : {"x" : 0.39, "top" : 0.4}
+
+		Button:
+			text : "Create an account"
+			size_hint : 0.4, 0.1
+			pos_hint : {"x" : 0.33, "top" : 0.2}
+			on_release:
+				root.manager.current = "signUp"
+				root.manager.transition.direction = "left"
+
+<SignUpWindow>:
+    name : "signUp"
+    username : username
+    email : email
+    age : age
+    pwd : pwd
+    pwd2 : pwd2
+    FloatLayout:
+        Label:
+            text : "USERNAME: "
+            size_hint : 0.2, 0.1
+            pos_hint : {"x":0.25, "top":0.95}
+
+        TextInput:
+            id : username
+            multiline : False
+            size_hint : 0.3, 0.1
+            pos_hint : {"x" : 0.45, "top" : 0.95}
+
+        Label:
+            text : "EMAIL: "
+            size_hint : 0.2, 0.1
+            pos_hint : {"x" : 0.25, "top" : 0.8}
+
+        TextInput:
+            id : email
+            multiline : False
+            size_hint : 0.3, 0.1
+            pos_hint : {"x" : 0.45, "top" : 0.8}
+
+        Label:
+            text : "Age: "
+            size_hint : 0.2, 0.1
+            pos_hint : {"x" : 0.25, "top" : 0.65}
+
+        TextInput:
+            id : age
+            multiline : False
+            size_hint : 0.3, 0.1
+            pos_hint : {"x" : 0.45, "top" : 0.65}
+            input_filter: 'int'
+
+        Label:
+            text : "PASSWORD: "
+            size_hint : 0.2, 0.1
+            pos_hint : {"x" : 0.25, "top" : 0.5}
+
+        TextInput:
+            id : pwd
+            multiline : False
+            size_hint : 0.3, 0.1
+            pos_hint : {"x" : 0.45, "top" : 0.5}
+
+        Label:
+            text : "REPEAT PASSWORD: "
+            size_hint : 0.2, 0.1
+            pos_hint : {"x" : 0.25, "top" : 0.35}
+
+        TextInput:
+            id : pwd2
+            multiline : False
+            size_hint : 0.3, 0.1
+            pos_hint : {"x" : 0.45, "top" : 0.35}
+
+        Button:
+            text : "SUBMIT"
+            size_hint : 0.3, 0.05
+            pos_hint : {"x" : 0.39, "top" : 0.20}
+            on_press :
+                root.validate_data()
+                root.manager.transition.direction = "right"
+
+        Button:
+            text : "GO BACK"
+            size_hint : 0.3, 0.05
+            pos_hint : {"x" : 0.39, "top" : 0.10}
+            on_press :
+                root.manager.current = "login"
+                root.manager.transition.direction = "right"
