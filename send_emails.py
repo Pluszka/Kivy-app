@@ -25,6 +25,6 @@ class Emails:
         msg['To'] = user_email
         msg.add_header('Content-Type', 'text/html')
         content = f'<p>Please click link above to confirm your e-mail.</p>' \
-                  f'<button onclick="emailToken.confirm_token({token})">Confirm an email</button>'
+                  f'<a href="http://127.0.0.1:5000/confirm_email/{token}">Click</a>'
         msg.set_content(content, subtype='html')
         return msg
