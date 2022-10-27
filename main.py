@@ -1,9 +1,11 @@
 import os
 
+from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash
+
 from email_token import EmailToken
-from dotenv import load_dotenv
 
 load_dotenv()
 app = Flask(__name__)
@@ -20,27 +22,37 @@ class User(db.Model):
     email = db.Column(db.String(250), unique=True, nullable=False)
     age = db.Column(db.Integer, nullable=False)
     pwd = db.Column(db.String(500), nullable=False)
-
-    # def __init__(self, name, email, age, pwd):
-    #     self.name = name
-    #     self.email = email
-    #     self.age = age
-    #     self.pwd = pwd
+    token = db.Column(db.String(500), nullable=False)
+    verified = db.Column(db.Boolean, nullable=False)
 
 @app.route('/confirm_email/<string:token>')
 def confirm(token):
     emailToken.confirm_token(token)
+    var = 'works!'
+    return f"<h3>Thanks for confirming your e-mail. Your account is created. {var}</h3>"
 
-    # new_user = User(
-    #     name=,
-    # # )
-    # db.session.add(new_user)
-    # db.session.commit()
-    return "<h3>Thanks for confirming your e-mail. Your account is created.</h3>"
-
+@app.route('/<string:pwd>/<string:name>/<string:email>/<int:age>/<string:token>')
+def create_user(pwd, name, email, age, token):
+    print('dupa')
+    secure_password = generate_password_hash(
+        pwd,
+        method='pbkdf2:sha256',
+        salt_length=8
+    )
+    new_user = User(
+        name=name,
+        email=email,
+        age=age,
+        pwd=secure_password,
+        token=token,
+        verified=False
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return 'success'
 
 if __name__ == '__main__':
     # Two lines below required only once, when creating DB.
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
     app.run(debug=True)

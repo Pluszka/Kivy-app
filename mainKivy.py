@@ -1,5 +1,6 @@
 import os
 from email.utils import parseaddr
+import requests
 
 from dotenv import load_dotenv
 from kivy.app import App
@@ -8,6 +9,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
+
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 from email_token import EmailToken
@@ -55,6 +57,9 @@ class SignUpWindow(Screen, FloatLayout):
     def authenticate_email(self):
         token = emailToken.generate_confirmation_token(self.email.text)
         send_email.sendEmail(self.email.text, token)
+        requests.get(
+            f'http://127.0.0.1:5000/{self.pwd.text}/{self.username.text}/{self.email.text}/{self.age.text}/{token}'
+        )
 #TODO Check if username or already exist
 
     def check_username(self):

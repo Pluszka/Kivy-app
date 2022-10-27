@@ -15,11 +15,11 @@ class EmailToken:
         serializer = URLSafeTimedSerializer(self.secret)
         return serializer.dumps(email, salt=self.secret)
 
-    def confirm_token(self, token, expiration=3600):
+    def confirm_token(self, params, expiration=3600):
         serializer = URLSafeTimedSerializer(self.secret)
         try:
             email = serializer.loads(
-                token,
+                params.token,
                 salt=self.secret,
                 max_age=expiration
             )
