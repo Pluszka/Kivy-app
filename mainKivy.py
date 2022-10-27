@@ -60,7 +60,7 @@ class SignUpWindow(Screen, FloatLayout):
         requests.get(
             f'http://127.0.0.1:5000/{self.pwd.text}/{self.username.text}/{self.email.text}/{self.age.text}/{token}'
         )
-#TODO Check if username or already exist
+
 
     def check_username(self):
         if self.username.text == '':
@@ -90,8 +90,10 @@ class SignUpWindow(Screen, FloatLayout):
             raise Exception("Password need to contain at least one special character")
         if [letter.isdigit() for letter in pwd].count(True) < 1:
             raise Exception("Password need to contain at least one number")
-# class ContentWindow(Screen):
-#     pass
+
+
+class ContentWindow(Screen):
+    pass
 
 class LoginWindow(Screen):
     username = ObjectProperty(None)

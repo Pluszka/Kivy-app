@@ -33,6 +33,13 @@ def confirm(token):
 
 @app.route('/<string:pwd>/<string:name>/<string:email>/<int:age>/<string:token>')
 def create_user(pwd, name, email, age, token):
+    user = db.session.query(User).filter_by(email=email).first()
+    if user != None:
+        raise Exception('Email already signed up')
+    user = db.session.query(User).filter_by(name=name).first()
+    if user != None:
+        raise Exception('Username already exist')
+
     secure_password = generate_password_hash(
         pwd,
         method='pbkdf2:sha256',
@@ -60,9 +67,9 @@ def verified(token):
 
 @app.route('/login/<string:username>/<string:pwd>')
 def login(username, pwd):
-    user = db.session.query(User).filter_by(token=username).first()
+    user = db.session.query(User).filter_by(name=username).first()
     if user == None:
-        user = db.session.query(User).filter_by(token=pwd).first()
+        user = db.session.query(User).filter_by(pwd=pwd).first()
     if user == None:
         raise Exception(ERROR_MSG)
     if not check_password_hash(user.pwd, pwd):
