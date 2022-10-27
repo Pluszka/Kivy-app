@@ -97,6 +97,9 @@ class LoginWindow(Screen):
     username = ObjectProperty(None)
     pwd = ObjectProperty(None)
 
+    def login(self):
+        requests.get(f'http://127.0.0.1:5000/login/{self.username}/{self.pwd}')
+
 
 kv = Builder.load_file('loginSystem.kv')
 

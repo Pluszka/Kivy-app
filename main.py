@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from email_token import EmailToken
 
@@ -15,6 +15,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+ERROR_MSG = 'Not valid credentials or not confirmed email'
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,10 +54,23 @@ def create_user(pwd, name, email, age, token):
 def verified(token):
     user = db.session.query(User).filter_by(token=token).first()
     if user:
-        print('dupa')
         user.verified = True
         db.session.commit()
     return ''
+
+@app.route('/login/<string:username>/<string:pwd>')
+def login(username, pwd):
+    user = db.session.query(User).filter_by(token=username).first()
+    if user == None:
+        user = db.session.query(User).filter_by(token=pwd).first()
+    if user == None:
+        raise Exception(ERROR_MSG)
+    if not check_password_hash(user.pwd, pwd):
+        raise Exception(ERROR_MSG)
+    if user.verified == False:
+        raise Exception(ERROR_MSG)
+    return ''
+
 
 if __name__ == '__main__':
     # Two lines below required only once, when creating DB.
