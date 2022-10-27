@@ -28,12 +28,10 @@ class User(db.Model):
 @app.route('/confirm_email/<string:token>')
 def confirm(token):
     emailToken.confirm_token(token)
-    var = 'works!'
-    return f"<h3>Thanks for confirming your e-mail. Your account is created. {var}</h3>"
+    return f"<h3>Thanks for confirming your e-mail. Your account is created.</h3>"
 
 @app.route('/<string:pwd>/<string:name>/<string:email>/<int:age>/<string:token>')
 def create_user(pwd, name, email, age, token):
-    print('dupa')
     secure_password = generate_password_hash(
         pwd,
         method='pbkdf2:sha256',
@@ -49,7 +47,16 @@ def create_user(pwd, name, email, age, token):
     )
     db.session.add(new_user)
     db.session.commit()
-    return 'success'
+    return ''
+
+@app.route('/verified/<string:token>')
+def verified(token):
+    user = db.session.query(User).filter_by(token=token).first()
+    if user:
+        print('dupa')
+        user.verified = True
+        db.session.commit()
+    return ''
 
 if __name__ == '__main__':
     # Two lines below required only once, when creating DB.
