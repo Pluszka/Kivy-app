@@ -56,7 +56,6 @@ class SignUpWindow(Screen, FloatLayout):
         token = emailToken.generate_confirmation_token(self.email.text)
         send_email.sendEmail(self.email.text, token)
 #TODO Check if username or already exist
-#TODO Send authentication e-mail
 
     def check_username(self):
         if self.username.text == '':

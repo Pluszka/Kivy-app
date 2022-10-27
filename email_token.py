@@ -25,5 +25,4 @@ class EmailToken:
             )
         except:
             return False
-        print('confirmed dupa')
         return email
