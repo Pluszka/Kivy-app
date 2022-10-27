@@ -69,8 +69,9 @@ def verified(token):
 def login(username, pwd):
     user = db.session.query(User).filter_by(name=username).first()
     if user == None:
-        user = db.session.query(User).filter_by(pwd=pwd).first()
+        user = db.session.query(User).filter_by(email=username).first()
     if user == None:
+        print('dupa')
         raise Exception(ERROR_MSG)
     if not check_password_hash(user.pwd, pwd):
         raise Exception(ERROR_MSG)
@@ -78,6 +79,12 @@ def login(username, pwd):
         raise Exception(ERROR_MSG)
     return ''
 
+@app.route('/find/<string:username>')
+def find_user(username):
+    user = db.session.query(User).filter_by(name=username).first()
+    if user == None:
+        user = db.session.query(User).filter_by(email=username).first()
+    return [user.name, user.email, user.age]
 
 if __name__ == '__main__':
     # Two lines below required only once, when creating DB.

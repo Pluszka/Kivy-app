@@ -1,7 +1,7 @@
 WindowManager:
     LoginWindow:
     SignUpWindow:
-
+    ContentWindow:
 
 
 <LoginWindow>:
@@ -40,6 +40,8 @@ WindowManager:
             pos_hint : {"x" : 0.39, "top" : 0.4}
             on_release:
                 root.login()
+                root.manager.current = "content"
+                root.manager.get_screen("content").show(username.text)
 
 		Button:
 			text : "Create an account"
@@ -129,3 +131,5 @@ WindowManager:
                 root.manager.current = "login"
                 root.manager.transition.direction = "right"
 
+<ContentWindow>:
+    name : "content"

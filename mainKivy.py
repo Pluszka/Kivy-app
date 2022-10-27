@@ -93,14 +93,22 @@ class SignUpWindow(Screen, FloatLayout):
 
 
 class ContentWindow(Screen):
-    pass
+    def show(self, name):
+        data = requests.get(f'http://127.0.0.1:5000/find/{name}').json()
+        print(data)
+        labels = [
+            Label(text=f'Username: {data[0]}',  pos_hint={'center_x':.5, 'center_y':.8}),
+            Label(text=f'Email: {data[1]}', pos_hint={'center_x':.5, 'center_y':.6}),
+            Label(text=f'Age: {data[2]}', pos_hint={'center_x':.5, 'center_y':.4})]
+        [self.add_widget(label) for label in labels]
+
 
 class LoginWindow(Screen):
     username = ObjectProperty(None)
     pwd = ObjectProperty(None)
 
     def login(self):
-        requests.get(f'http://127.0.0.1:5000/login/{self.username}/{self.pwd}')
+        requests.get(f'http://127.0.0.1:5000/login/{self.username.text}/{self.pwd.text}')
 
 
 kv = Builder.load_file('loginSystem.kv')
