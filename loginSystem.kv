@@ -133,3 +133,11 @@ WindowManager:
 
 <ContentWindow>:
     name : "content"
+
+    Button:
+        text : "LOGOUT"
+        size_hint : 0.3, 0.1
+        pos_hint : {"x" : 0.39, "top" : 0.2}
+        on_release:
+            root.manager.current = "login"
+            root.manager.get_screen('login').clean()

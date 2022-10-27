@@ -1,15 +1,15 @@
 import os
 from email.utils import parseaddr
-import requests
 
+import requests
 from dotenv import load_dotenv
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
+from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
-
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 from email_token import EmailToken
@@ -95,7 +95,6 @@ class SignUpWindow(Screen, FloatLayout):
 class ContentWindow(Screen):
     def show(self, name):
         data = requests.get(f'http://127.0.0.1:5000/find/{name}').json()
-        print(data)
         labels = [
             Label(text=f'Username: {data[0]}',  pos_hint={'center_x':.5, 'center_y':.8}),
             Label(text=f'Email: {data[1]}', pos_hint={'center_x':.5, 'center_y':.6}),
@@ -110,6 +109,9 @@ class LoginWindow(Screen):
     def login(self):
         requests.get(f'http://127.0.0.1:5000/login/{self.username.text}/{self.pwd.text}')
 
+    def clean(self):
+        self.username.text = ''
+        self.pwd.text = ''
 
 kv = Builder.load_file('loginSystem.kv')
 
