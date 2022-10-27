@@ -5,20 +5,19 @@ from email_token import EmailToken
 
 emailToken = EmailToken()
 
+
 class Emails:
     def __init__(self, email, pwd):
         self.my_email = email
         self.app_pwd = pwd
 
-
-    def sendEmail(self, email_user, token):
+    def send_email(self, email_user, token):
         with smtplib.SMTP('smtp.gmail.com') as connection:
             connection.starttls()
             connection.login(self.my_email, self.app_pwd)
-            connection.send_message(self.writeMsg(email_user, token))
+            connection.send_message(self.write_msg(email_user, token))
 
-
-    def writeMsg(self, user_email, token):
+    def write_msg(self, user_email, token):
         msg = EmailMessage()
         msg['Subject'] = 'Confirm an email'
         msg['From'] = self.my_email
