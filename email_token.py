@@ -1,5 +1,5 @@
 import os
-
+import requests
 from dotenv import load_dotenv
 from itsdangerous import URLSafeTimedSerializer
 
@@ -16,14 +16,13 @@ class EmailToken:
         return serializer.dumps(email, salt=self.secret)
 
     def confirm_token(self, token, expiration=3600):
-        print('dupa')
         serializer = URLSafeTimedSerializer(self.secret)
         try:
-            email = serializer.loads(
+            serializer.loads(
                 token,
                 salt=self.secret,
                 max_age=expiration
             )
         except:
             return False
-        return email
+        return requests.get(f'http://127.0.0.1:5000/verified/{token}')

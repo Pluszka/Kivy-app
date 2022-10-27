@@ -1,6 +1,7 @@
 WindowManager:
     LoginWindow:
     SignUpWindow:
+    ContentWindow:
 
 
 <LoginWindow>:
@@ -32,11 +33,16 @@ WindowManager:
 			multiline :False
 			size_hint : 0.3, 0.1
 			pos_hint : {"x" : 0.45, "top" : 0.7}
+			password: True
 
         Button:
             text : "LOGIN"
             size_hint : 0.3, 0.1
             pos_hint : {"x" : 0.39, "top" : 0.4}
+            on_release:
+                root.login()
+                root.manager.current = "content"
+                root.manager.get_screen("content").show(username.text)
 
 		Button:
 			text : "Create an account"
@@ -98,6 +104,7 @@ WindowManager:
             multiline : False
             size_hint : 0.3, 0.1
             pos_hint : {"x" : 0.45, "top" : 0.5}
+            password: True
 
         Label:
             text : "REPEAT PASSWORD: "
@@ -109,6 +116,7 @@ WindowManager:
             multiline : False
             size_hint : 0.3, 0.1
             pos_hint : {"x" : 0.45, "top" : 0.35}
+            password: True
 
         Button:
             text : "SUBMIT"
@@ -125,3 +133,14 @@ WindowManager:
             on_press :
                 root.manager.current = "login"
                 root.manager.transition.direction = "right"
+
+<ContentWindow>:
+    name : "content"
+
+    Button:
+        text : "LOGOUT"
+        size_hint : 0.3, 0.1
+        pos_hint : {"x" : 0.39, "top" : 0.2}
+        on_release:
+            root.manager.current = "login"
+            root.manager.get_screen('login').clean()
